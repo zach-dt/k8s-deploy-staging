@@ -8,6 +8,7 @@ pipeline {
   stages {
     stage('Deploy to staging namespace') {
       steps {
+        checkout scm
         container('kubectl') {
           sh "kubectl -n staging apply -f ."
         }
