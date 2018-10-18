@@ -2,9 +2,6 @@ pipeline {
   agent {
     label 'maven'
   }
-  environment {
-
-  }
   stages {
     stage('Deploy to staging namespace') {
       steps {
