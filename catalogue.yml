@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: catalogue
-        image: 10.31.240.247:5000/library/sockshop/catalogue:staging
+        image: 10.31.240.247:5000/library/sockshop/catalogue-0.3.6
         resources:
           limits:
             cpu: 500m

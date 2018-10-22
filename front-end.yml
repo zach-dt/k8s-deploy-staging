@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: front-end
-        image: 10.31.240.247:5000/library/sockshop/front-end:staging
+        image: 10.31.240.247:5000/library/sockshop/front-end-0.3.14
         resources:
           limits:
             cpu: 300m
