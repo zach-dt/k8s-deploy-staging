@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: payment
-        image: 10.31.240.247:5000/library/sockshop/payment:staging
+        image: 10.31.240.247:5000/library/sockshop/payment-0.4.4
         resources:
           limits:
             cpu: 500m
