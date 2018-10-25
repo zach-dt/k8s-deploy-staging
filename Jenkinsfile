@@ -8,7 +8,7 @@ pipeline {
     label 'maven'
   }
   stages {
-    stage('Update service specification') {
+    stage('Update Deployment and Service specification') {
       agent {
         label 'git'
       }
