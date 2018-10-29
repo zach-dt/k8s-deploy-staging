@@ -82,6 +82,7 @@ pipeline {
               string(name: 'AVG_RT_VALIDATION', value: '250')
             ]
         }
+        //sh "git clone https://github.com/{env.GITHUB_ORGANIZATION}/${env.APP_NAME}"
         sh "git clone https://github.com/dynatrace-sockshop/${env.APP_NAME}"
         // Now we use the Performance Signature Plugin to pull in Dynatrace Metrics based on the spec file
         perfSigDynatraceReports envId: 'Dynatrace Tenant', nonFunctionalFailure: 1, specFile: "${env.APP_NAME}/monspec/${env.APP_NAME}_perfsig.json"
