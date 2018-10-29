@@ -15,6 +15,11 @@ spec:
       containers:
       - name: catalogue
         image: 10.31.240.247:5000/library/sockshop/catalogue-0.3.6
+        env: 
+        - name: DT_TAGS
+          value: "product=sockshop"
+        - name: DT_CUSTOM_PROP
+          value: "SERVICE_TYPE=BACKEND"
         resources:
           limits:
             cpu: 500m
