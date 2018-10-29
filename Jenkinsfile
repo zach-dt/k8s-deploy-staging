@@ -5,13 +5,10 @@ pipeline {
     string(name: 'VERSION', defaultValue: '', description: 'The version of the service to deploy.', trim: true)
   }
   agent {
-    label 'maven'
+    label 'git'
   }
   stages {
     stage('Update Deployment and Service specification') {
-      agent {
-        label 'git'
-      }
       steps {
         withCredentials([usernamePassword(credentialsId: 'git-credentials-acm', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
             sh "git config --global user.email ${env.GIT_USER_EMAIL}"
@@ -70,15 +67,16 @@ pipeline {
               string(name: 'SERVER_URL', value: "${env.APP_NAME}.staging"),
               string(name: 'SERVER_PORT', value: '80'),
               string(name: 'CHECK_PATH', value: '/health'),
-              string(name: 'VUCount', value: '10'),
-              string(name: 'LoopCount', value: '250'),
+              string(name: 'VUCount', value: '1'), // 10
+              string(name: 'LoopCount', value: '2'), // 250
               string(name: 'DT_LTN', value: "PerfCheck_${BUILD_NUMBER}"),
               string(name: 'FUNC_VALIDATION', value: 'no'),
               string(name: 'AVG_RT_VALIDATION', value: '250')
             ]
         }
         // Now we use the Performance Signature Plugin to pull in Dynatrace Metrics based on the spec file
-        perfSigDynatraceReports envId: 'Dynatrace Tenant', nonFunctionalFailure: 1, specFile: "monspec/${env.APP_NAME}_perfsig.json"
+        sh "git clone https://github.com/dynatrace-sockshop/${env.APP_NAME}"
+        perfSigDynatraceReports envId: 'Dynatrace Tenant', nonFunctionalFailure: 1, specFile: "${env.APP_NAME}/monspec/${env.APP_NAME}_perfsig.json"
       }
     }
     stage('Deploy to production') {
