@@ -5,10 +5,13 @@ pipeline {
     string(name: 'VERSION', defaultValue: '', description: 'The version of the service to deploy.', trim: true)
   }
   agent {
-    label 'git'
+    label 'maven'
   }
   stages {
     stage('Update Deployment and Service specification') {
+      agent {
+        label 'git'
+      }
       steps {
         withCredentials([usernamePassword(credentialsId: 'git-credentials-acm', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
             sh "git config --global user.email ${env.GIT_USER_EMAIL}"
@@ -46,6 +49,9 @@ pipeline {
       }
     }
     stage('Performance Check Staging') {
+      agent {
+        label 'git'
+      }
       steps {
         recordDynatraceSession(
           envId: 'Dynatrace Tenant',
@@ -74,8 +80,8 @@ pipeline {
               string(name: 'AVG_RT_VALIDATION', value: '250')
             ]
         }
-        // Now we use the Performance Signature Plugin to pull in Dynatrace Metrics based on the spec file
         sh "git clone https://github.com/dynatrace-sockshop/${env.APP_NAME}"
+        // Now we use the Performance Signature Plugin to pull in Dynatrace Metrics based on the spec file
         perfSigDynatraceReports envId: 'Dynatrace Tenant', nonFunctionalFailure: 1, specFile: "${env.APP_NAME}/monspec/${env.APP_NAME}_perfsig.json"
       }
     }
