@@ -81,11 +81,7 @@ pipeline {
       steps {
         container('git') {
           withCredentials([usernamePassword(credentialsId: 'git-credentials-acm', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-            //sh "git config --global user.email ${env.GITHUB_USER_EMAIL}"
-            //sh "git clone https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/${env.GITHUB_ORGANIZATION}/k8s-deploy-staging"
-            //sh "git clone https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/dynatrace-sockshop/k8s-deploy-staging"
             sh "cd k8s-deploy-staging/ && cp ${env.APP_NAME}.yml ready-for-prod/"
-            sh "cd k8s-deploy-staging/ && ls -lsa ready-for-prod"
             sh "cd k8s-deploy-staging/ && git add ready-for-prod/${env.APP_NAME}.yml && git commit -m 'Set ${env.APP_NAME} version ${env.VERSION} to production ready.'"
             //sh "cd k8s-deploy-staging/ && git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/${env.GITHUB_ORGANIZATION}/k8s-deploy-staging"
             sh "cd k8s-deploy-staging/ && git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/dynatrace-sockshop/k8s-deploy-staging"
