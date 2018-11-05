@@ -51,7 +51,6 @@ pipeline {
         }
       }
     }
-    /*
     stage('Run integration check (e2e check) in staging') {
       steps {
         container('jmeter') {
@@ -76,7 +75,6 @@ pipeline {
         }
       }
     }
-    */
     stage('Mark artifact for production ready') {
       steps {
         container('git') {
