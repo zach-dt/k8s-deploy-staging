@@ -53,6 +53,9 @@ pipeline {
     }
     stage('Run integration check (e2e check) in staging') {
       steps {
+        echo "Waiting for the service to start..."
+        sleep 120
+
         container('jmeter') {
           script {
             def status = executeJMeter (
