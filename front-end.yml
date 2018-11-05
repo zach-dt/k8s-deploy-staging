@@ -29,9 +29,6 @@ spec:
             memory: 300Mi
         ports:
         - containerPort: 8080
-        env:
-        - name: SESSION_REDIS
-          value: "true"
         securityContext:
           runAsNonRoot: true
           runAsUser: 10001
