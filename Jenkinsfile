@@ -56,7 +56,7 @@ pipeline {
         container('jmeter') {
           script {
             def status = executeJMeter (
-              scriptName: "jmeter/front-end_load.jmx", 
+              scriptName: "jmeter/queue-master_load.jmx", 
               resultsDir: "IntegrationCheck_${BUILD_NUMBER}",
               serverUrl: "${env.APP_NAME}.dev", 
               serverPort: 80,
