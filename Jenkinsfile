@@ -1,3 +1,5 @@
+@Library('dynatrace@master') _
+
 pipeline {
   parameters {
     string(name: 'APP_NAME', defaultValue: '', description: 'The name of the service to deploy.', trim: true)
