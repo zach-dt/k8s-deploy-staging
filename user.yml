@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: user
-        image: 10.31.240.247:5000/library/sockshop/user-0.4.8
+        image: to-be-replaced-by-jenkins
         env: 
         - name: DT_TAGS
           value: "product=sockshop"
