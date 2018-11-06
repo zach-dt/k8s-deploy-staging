@@ -49,31 +49,54 @@ pipeline {
         }
       }
     }
-    stage('Run integration check (e2e check) in staging') {
+    stage('Run production ready e2e check in staging') {
       steps {
         echo "Waiting for the service to start..."
         sleep 150
 
-        container('jmeter') {
-          script {
-            def status = executeJMeter (
-              scriptName: "jmeter/queue-master_load.jmx", 
-              resultsDir: "IntegrationCheck_staging",
-              serverUrl: "${env.APP_NAME}.dev", 
-              serverPort: 80,
-              checkPath: '/health',
-              vuCount: 1,
-              loopCount: 1,
-              LTN: "IntegrationCheck_${BUILD_NUMBER}",
-              funcValidation: true,
-              avgRtValidation: 0
-            )
-            if (status != 0) {
-              currentBuild.result = 'FAILED'
-              error "Integration check (e2e check) in staging failed."
+        recordDynatraceSession(
+          envId: 'Dynatrace Tenant',
+          testCase: 'loadtest',
+          tagMatchRules: [
+            [
+              meTypes: [
+                [meType: 'SERVICE']
+              ],
+              tags: [
+                [context: 'CONTEXTLESS', key: 'app', value: "${env.APP_NAME}"],
+                [context: 'CONTEXTLESS', key: 'environment', value: 'dev']
+              ]
+            ]
+          ]
+        ) 
+        {
+          container('jmeter') {
+            script {
+              def status = executeJMeter ( 
+                scriptName: "jmeter/front-end_e2e_load.jmx",
+                resultsDir: "E2E_${env.APP_NAME}",
+                serverUrl: "${env.APP_NAME}.dev", 
+                serverPort: 80,
+                checkPath: '/health',
+                vuCount: 10,
+                loopCount: 5,
+                LTN: "E2E_${BUILD_NUMBER}",
+                funcValidation: false,
+                avgRtValidation: 4000
+              )
+              if (status != 0) {
+                currentBuild.result = 'FAILED'
+                error "Performance check failed."
+              }
             }
           }
         }
+
+        perfSigDynatraceReports(
+          envId: 'Dynatrace Tenant', 
+          nonFunctionalFailure: 1, 
+          specFile: "monspec/e2e_perfsig.json"
+        )
       }
     }
     stage('Mark artifact for production ready') {
