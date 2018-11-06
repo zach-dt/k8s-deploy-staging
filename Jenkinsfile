@@ -52,7 +52,7 @@ pipeline {
     stage('Run production ready e2e check in staging') {
       steps {
         echo "Waiting for the service to start..."
-        sleep 150
+        //sleep 150
 
         recordDynatraceSession(
           envId: 'Dynatrace Tenant',
@@ -64,7 +64,7 @@ pipeline {
               ],
               tags: [
                 [context: 'CONTEXTLESS', key: 'app', value: "${env.APP_NAME}"],
-                [context: 'CONTEXTLESS', key: 'environment', value: 'dev']
+                [context: 'CONTEXTLESS', key: 'environment', value: 'staging']
               ]
             ]
           ]
