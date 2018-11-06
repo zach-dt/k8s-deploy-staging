@@ -60,7 +60,7 @@ pipeline {
           script {
             def status = executeJMeter (
               scriptName: "jmeter/queue-master_load.jmx", 
-              resultsDir: "IntegrationCheck_${BUILD_NUMBER}",
+              resultsDir: "IntegrationCheck_staging",
               serverUrl: "${env.APP_NAME}.dev", 
               serverPort: 80,
               checkPath: '/health',
