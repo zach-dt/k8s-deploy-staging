@@ -75,7 +75,7 @@ pipeline {
               def status = executeJMeter ( 
                 scriptName: "jmeter/front-end_e2e_load.jmx",
                 resultsDir: "E2E_${env.APP_NAME}",
-                serverUrl: "${env.APP_NAME}.dev", 
+                serverUrl: "front-end.staging", 
                 serverPort: 80,
                 checkPath: '/health',
                 vuCount: 10,
@@ -86,7 +86,7 @@ pipeline {
               )
               if (status != 0) {
                 currentBuild.result = 'FAILED'
-                error "Performance check failed."
+                error "e2e check in staging failed."
               }
             }
           }
