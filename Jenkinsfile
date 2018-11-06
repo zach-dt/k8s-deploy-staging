@@ -74,13 +74,13 @@ pipeline {
             script {
               def status = executeJMeter ( 
                 scriptName: "jmeter/front-end_e2e_load.jmx",
-                resultsDir: "E2E_${env.APP_NAME}",
+                resultsDir: "e2eCheck_${env.APP_NAME}",
                 serverUrl: "front-end.staging", 
                 serverPort: 80,
                 checkPath: '/health',
-                vuCount: 10,
-                loopCount: 5,
-                LTN: "E2E_${BUILD_NUMBER}",
+                vuCount: 1,
+                loopCount: 1,
+                LTN: "e2eCheck_${BUILD_NUMBER}",
                 funcValidation: false,
                 avgRtValidation: 4000
               )
