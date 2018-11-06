@@ -86,7 +86,7 @@ pipeline {
               )
               if (status != 0) {
                 currentBuild.result = 'FAILED'
-                error "e2e check in staging failed."
+                error "Production ready e2e check in staging failed."
               }
             }
           }
@@ -97,17 +97,6 @@ pipeline {
           nonFunctionalFailure: 1, 
           specFile: "monspec/e2e_perfsig.json"
         )
-      }
-    }
-    stage('Mark artifact for production ready') {
-      steps {
-        container('git') {
-          withCredentials([usernamePassword(credentialsId: 'git-credentials-acm', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-            sh "cd k8s-deploy-staging/ && cp ${env.APP_NAME}.yml ready-for-prod/"
-            sh "cd k8s-deploy-staging/ && git add ready-for-prod/${env.APP_NAME}.yml && git commit -m 'Set ${env.APP_NAME} version ${env.VERSION} to production ready.'"
-            sh "cd k8s-deploy-staging/ && git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/${env.GITHUB_ORGANIZATION}/k8s-deploy-staging"
-          }
-        }
       }
     }
   }
