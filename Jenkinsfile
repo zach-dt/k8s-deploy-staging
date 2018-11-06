@@ -76,7 +76,7 @@ pipeline {
                 scriptName: "jmeter/front-end_e2e_load.jmx",
                 resultsDir: "e2eCheck_${env.APP_NAME}",
                 serverUrl: "front-end.staging", 
-                serverPort: 80,
+                serverPort: 8080,
                 checkPath: '/health',
                 vuCount: 1,
                 loopCount: 1,
