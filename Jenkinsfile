@@ -31,26 +31,14 @@ pipeline {
         }
       }
     }
-    /*
     stage('DT Deploy Event') {
       steps {
-        createDynatraceDeploymentEvent(
-          envId: 'Dynatrace Tenant',
-          tagMatchRules: [
-            [
-              meTypes: [
-                [meType: 'SERVICE']
-              ],
-              tags: [
-                [context: 'CONTEXTLESS', key: 'app', value: "${env.APP_NAME}"],
-                [context: 'CONTEXTLESS', key: 'environment', value: 'staging']
-              ]
-            ]
-          ]) {
+        container("curl") {
+          // send custom deployment event to Dynatrace
+          sh "curl -X POST \"$DT_TENANT_URL/api/v1/events?Api-Token=$DT_API_TOKEN\" -H \"accept: application/json\" -H \"Content-Type: application/json\" -d \"{ \\\"eventType\\\": \\\"CUSTOM_DEPLOYMENT\\\", \\\"attachRules\\\": { \\\"tagRule\\\" : [{ \\\"meTypes\\\" : [\\\"SERVICE\\\"], \\\"tags\\\" : [ { \\\"context\\\" : \\\"CONTEXTLESS\\\", \\\"key\\\" : \\\"app\\\", \\\"value\\\" : \\\"${env.APP_NAME}\\\" }, { \\\"context\\\" : \\\"CONTEXTLESS\\\", \\\"key\\\" : \\\"environment\\\", \\\"value\\\" : \\\"production\\\" } ] }] }, \\\”deploymentName\\\”:\\\”${env.JOB_NAME}\\\", \\\”deploymentProject\\\”:\\\”\\\”, \\\”ciBackLink\\\”:\\\”${env.BUILD_URL}\\\”, \\\”source\\\":\\\"Jenkins\\\", \\\"customProperties\\\": { \\\"Jenkins Build Number\\\": \\\”${env.BUILD_ID}\\\”,  \\\"Git commit\\\": \\\”${env.GIT_COMMIT}\\\" } }\" " "
         }
       }
     }
-    */
     stage('Run production ready e2e check in staging') {
       steps {
         echo "Waiting for the service to start..."
