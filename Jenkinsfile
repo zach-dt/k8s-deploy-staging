@@ -31,6 +31,7 @@ pipeline {
         }
       }
     }
+    /*
     stage('DT Deploy Event') {
       steps {
         container("curl") {
@@ -39,6 +40,7 @@ pipeline {
         }
       }
     }
+    */
     stage('Run production ready e2e check in staging') {
       steps {
         echo "Waiting for the service to start..."
