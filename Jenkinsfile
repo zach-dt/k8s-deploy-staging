@@ -46,7 +46,6 @@ pipeline {
     stage('DT Deploy Event') {
       steps {
         container("curl") {
-          // send custom deployment events to Dynatrace
           script {
             tagMatchRules[0].tags[0].value = "${env.APP_NAME}"
             def status = pushDynatraceDeploymentEvent (
@@ -61,20 +60,21 @@ pipeline {
         echo "Waiting for the service to start..."
         sleep 150
 
-        recordDynatraceSession(
+        recordDynatraceSession (
           envId: 'Dynatrace Tenant',
           testCase: 'loadtest',
-          tagMatchRules: [
-            [
-              meTypes: [
-                [meType: 'SERVICE']
-              ],
-              tags: [
-                [context: 'CONTEXTLESS', key: 'app', value: "${env.APP_NAME}"],
-                [context: 'CONTEXTLESS', key: 'environment', value: 'staging']
-              ]
-            ]
-          ]
+          tagMatchRules: tagMatchRules
+          // tagMatchRules: [
+          //   [
+          //     meTypes: [
+          //       [meType: 'SERVICE']
+          //     ],
+          //     tags: [
+          //       [context: 'CONTEXTLESS', key: 'app', value: "${env.APP_NAME}"],
+          //       [context: 'CONTEXTLESS', key: 'environment', value: 'staging']
+          //     ]
+          //   ]
+          // ]
         ) 
         {
           container('jmeter') {
