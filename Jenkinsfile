@@ -48,7 +48,7 @@ pipeline {
         container("curl") {
           // send custom deployment events to Dynatrace
           script {
-            tagRule[0].tags[0].value = "${env.APP_NAME}"
+            tagMatchRules[0].tags[0].value = "${env.APP_NAME}"
             def status = pushDynatraceDeploymentEvent (
               tagRule : tagMatchRules
             )
