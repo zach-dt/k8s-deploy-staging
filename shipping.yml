@@ -28,7 +28,7 @@ spec:
             memory: 1024Mi
           requests:
             cpu: 400m
-            memory: 1024Mi
+            memory: 768Mi
         ports:
         - containerPort: 8080
         volumeMounts:
