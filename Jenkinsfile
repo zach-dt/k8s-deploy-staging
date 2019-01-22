@@ -1,5 +1,17 @@
 @Library('dynatrace@master') _
 
+def tagMatchRules = [
+  [
+    meTypes: [
+      [meType: 'SERVICE']
+    ],
+    tags : [
+      [context: 'CONTEXTLESS', key: 'app', value: ''],
+      [context: 'CONTEXTLESS', key: 'environment', value: 'staging']
+    ]
+  ]
+]
+
 pipeline {
   parameters {
     string(name: 'APP_NAME', defaultValue: '', description: 'The name of the service to deploy.', trim: true)
@@ -31,35 +43,31 @@ pipeline {
         }
       }
     }
-    /*
     stage('DT Deploy Event') {
       steps {
         container("curl") {
-          // send custom deployment event to Dynatrace
-          sh "curl -X POST \"$DT_TENANT_URL/api/v1/events?Api-Token=$DT_API_TOKEN\" -H \"accept: application/json\" -H \"Content-Type: application/json\" -d \"{ \\\"eventType\\\": \\\"CUSTOM_DEPLOYMENT\\\", \\\"attachRules\\\": { \\\"tagRule\\\" : [{ \\\"meTypes\\\" : [\\\"SERVICE\\\"], \\\"tags\\\" : [ { \\\"context\\\" : \\\"CONTEXTLESS\\\", \\\"key\\\" : \\\"app\\\", \\\"value\\\" : \\\"${env.APP_NAME}\\\" }, { \\\"context\\\" : \\\"CONTEXTLESS\\\", \\\"key\\\" : \\\"environment\\\", \\\"value\\\" : \\\"staging\\\" } ] }] }, \\\"deploymentName\\\":\\\"${env.JOB_NAME}\\\", \\\"deploymentVersion\\\":\\\"${env.VERSION}\\\", \\\"deploymentProject\\\":\\\"\\\", \\\"ciBackLink\\\":\\\"${env.BUILD_URL}\\\", \\\"source\\\":\\\"Jenkins\\\", \\\"customProperties\\\": { \\\"Jenkins Build Number\\\": \\\"${env.BUILD_ID}\\\",  \\\"Git commit\\\": \\\"${env.GIT_COMMIT}\\\" } }\" "
+          script {
+            tagMatchRules[0].tags[0].value = "${env.APP_NAME}"
+            def status = pushDynatraceDeploymentEvent (
+              tagRule : tagMatchRules,
+              customProperties : [
+                [key: 'Jenkins Build Number', value: "${env.BUILD_ID}"],
+                [key: 'Git commit', value: "${env.GIT_COMMIT}"]
+              ]
+            )
+          }
         }
       }
     }
-    */
     stage('Run production ready e2e check in staging') {
       steps {
         echo "Waiting for the service to start..."
         sleep 150
 
-        recordDynatraceSession(
+        recordDynatraceSession (
           envId: 'Dynatrace Tenant',
           testCase: 'loadtest',
-          tagMatchRules: [
-            [
-              meTypes: [
-                [meType: 'SERVICE']
-              ],
-              tags: [
-                [context: 'CONTEXTLESS', key: 'app', value: "${env.APP_NAME}"],
-                [context: 'CONTEXTLESS', key: 'environment', value: 'staging']
-              ]
-            ]
-          ]
+          tagMatchRules: tagMatchRules
         ) 
         {
           container('jmeter') {

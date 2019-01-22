@@ -5,14 +5,28 @@
         {
             "timeseriesId" : "com.dynatrace.builtin:service.responsetime",
             "aggregation" : "avg",
-            "tags" : "app:carts,environment:dev",
+            "tags" : "app:carts,environment:staging",
             "upperLimit" : 800.0,
             "lowerLimit" : 600.0
         },
         {
             "timeseriesId" : "com.dynatrace.builtin:service.failurerate",
             "aggregation" : "avg",
-            "tags" : "app:carts,environment:dev",
+            "tags" : "app:carts,environment:staging",
+            "upperLimit" : 5.0,
+            "lowerLimit" : 0.0
+        },
+        {
+            "timeseriesId" : "com.dynatrace.builtin:service.responsetime",
+            "aggregation" : "avg",
+            "tags" : "app:front-end,environment:staging",
+            "upperLimit" : 800.0,
+            "lowerLimit" : 600.0
+        },
+        {
+            "timeseriesId" : "com.dynatrace.builtin:service.failurerate",
+            "aggregation" : "avg",
+            "tags" : "app:front-end,environment:staging",
             "upperLimit" : 5.0,
             "lowerLimit" : 0.0
         }
