@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: front-end
-        image: 10.31.240.247:5000/library/sockshop/front-end-0.3.0
+        image: 10.31.240.247:5000/library/sockshop/front-end-0.6.0
         env: 
         - name: DT_TAGS
           value: "product=sockshop"
@@ -23,10 +23,10 @@ spec:
         resources:
           limits:
             cpu: 300m
-            memory: 1000Mi
+            memory: 1024Mi
           requests:
             cpu: 100m
-            memory: 300Mi
+            memory: 320Mi
         ports:
         - containerPort: 8080
         livenessProbe:
