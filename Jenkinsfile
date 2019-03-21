@@ -64,7 +64,14 @@ pipeline {
     
     
     // DO NOT uncomment until 10_01 Lab
-     
+    stage('Warmup the fire my dudes') {
+      steps {
+        container('kubectl') {
+          sh "kubectl rollout status deployment carts-v1 -n production"
+        }
+      }
+    }
+
     stage('Run production ready e2e check in staging') {
       steps {
         echo "Waiting for the service to start..."
